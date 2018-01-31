@@ -70,6 +70,8 @@ class Printer():
         # TODO: this  is not safe if the printer is offline
         return self.api_get('/api/files/local')
 
+        {'files': []}
+
     def upload_file(self, filename):
         # TODO check that the file exists
         files = {'file': open(filename, 'rb')}
@@ -80,9 +82,12 @@ class Printer():
         """
         Sends the required files and settings to the printer
         """
-        pass
+        self.upload_file(job.filename)
+        # Select the file
+        # Start the job
 
 
 
 p = Printer('10.11.12.166', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
+# print(p.local_files())
 print(p.upload_file('test_upload.g'))
