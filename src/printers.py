@@ -8,7 +8,8 @@ class Printer():
     Handels the API calls to octoprint.
     """
 
-    def __init__(self, hostname, api_key, location, printer_type, material_type, material_colour):
+    def __init__(self, name, hostname, api_key, location, printer_type, material_type, material_colour):
+        self.name            = name
         self.url             = 'http://' + hostname
         self.headers         = {'X-Api-Key': api_key}
         self.location        = location
@@ -69,7 +70,7 @@ class Printer():
         # TODO: this  is not safe if the printer is offline
         return self.api_get('/api/files/local')
 
-        {'files': []}
+        # {'files': []}
 
     def upload_file(self, filename):
         # TODO check that the file exists
@@ -87,7 +88,7 @@ class Printer():
 
 
 
-p = Printer('192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
-print(p.status())
-# print(p.local_files())
-# print(p.upload_file('test_upload.g'))
+# p = Printer('192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
+# print(p.status())
+# # print(p.local_files())
+# # print(p.upload_file('test_upload.g'))
