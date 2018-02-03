@@ -136,13 +136,11 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
-            return ('no file uploaded')
+            return ("No file part")
         user_file = request.files['file']
         # if user does not select file, browser also
         # submit a empty part without filename
         if user_file.filename == '':
-            flash('No selected file')
             return ('no file extension')
         if user_file and allowed_file(user_file.filename):
             filename = secure_filename(user_file.filename)
