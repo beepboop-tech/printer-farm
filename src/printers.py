@@ -88,6 +88,6 @@ class Printer():
 
 
 
-p = Printer('10.11.12.166', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
+# p = Printer('192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
 # print(p.local_files())
-print(p.upload_file('test_upload.g'))
+# print(p.upload_file('test_upload.g'))
