@@ -54,6 +54,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
+    faculty = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(80))
 
 
@@ -73,6 +74,7 @@ class registerForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     email = StringField('email', validators=[InputRequired(), Email(
         message='Invalid email'), Length(max=50)])
+    faculty = StringField('faculty', validators=[InputRequired(), Length(max=20)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
 
@@ -109,7 +111,7 @@ def signup():
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = User(username=form.username.data,
-                        email=form.email.data, password=hashed_password)
+                        email=form.email.data, faculty=form.faculty.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         return '<h1> New user created </h1>'
@@ -144,18 +146,12 @@ def upload_file():
             return ('no file extension')
         if user_file and allowed_file(user_file.filename):
             filename = secure_filename(user_file.filename)
-            path     = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             user_file.save(path)
             new_job = Job(path, 'black', 'PLA')
             orchestrator.queue.put(new_job)
             return filename
     return render_template('dashboard/upload.html')
-
-
-@app.route('/settings')
-@login_required
-def settings():
-    return render_template('dashboard/settings.html')
 
 
 @app.route('/history')
@@ -167,7 +163,7 @@ def history():
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('dashboard/profile.html')
+    return render_template('dashboard/profile.html', name=current_user.username, email=current_user.email, faculty=current_user.faculty)
 
 
 @app.route('/logout')
