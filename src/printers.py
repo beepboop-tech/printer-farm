@@ -77,14 +77,18 @@ class Printer():
         # {'files': []}
 
     def upload_file(self, filename):
-        # TODO check that the file exists
         files = {'file': open(filename, 'rb')}
-        print(requests.post(self.url + '/api/files/local', headers=self.headers, files=files).json())
+        requests.post(self.url + '/api/files/local', headers=self.headers, files=files)
 
     def make(self, job: Job):
         """
         Sends the required files and settings to the printer
         """
         self.upload_file(job.filename)
+        # print(job.filename.split('/')[-1])  #  TODO: Check that this works when app works
+        requests.post(self.url+'/api/files/local/'+job.filename.split('/')[-1], headers=self.headers, json={"command": "select", "print":"true"})
+        # print(self.url+'/api/files/local/'+job.filename.split('/')[-1])
         # Select the file
         # Start the job
+    def cancel(self):
+        requests.post(self.url+'/api/job', headers=self.headers, json={"command": "cancel"})
