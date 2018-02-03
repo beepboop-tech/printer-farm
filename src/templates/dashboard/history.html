@@ -1,7 +1,7 @@
 {% extends "bootstrap/base.html" %}
 
 {% block title %}
-Dashboard
+History
 {% endblock %}
 
 {% block styles %}
@@ -34,50 +34,20 @@ Dashboard
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Print Queue <span class="sr-only">(current)</span></a></li>
+            <li><a href="/dashboard">Print Queue</a></li>
             <li><a href="/upload">Uploads</a></li>
-            <li><a href="/history">History</a></li>
+            <li class="active"><a href="/history">History<span class="sr-only">(current)</span></a></li>
             <li><a href="/profile">Profile</a></li>
             <li><a href="/settings">Settings</a></li>
           </ul>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Welcome, {{ name }}</h1>
-          <p></p>
-          <h2 class="sub-header">Job queue</h2>
-          <div class="table-responsive">
-            <table class="table table-bordered table-responsive">
-              <thead>
-                <tr>
-                  <th>Jobname</th>
-                  <th>Username</th>
-                  <th>Location</th>
-                  <th>Time remaining</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>dildo.stl</td>
-                  <td>TEvans</td>
-                  <td>Hackspace</td>
-                  <td>10:34</td>
-                </tr>
-                <tr>
-                  <td>bracket.stl</td>
-                  <td>TBadger</td>
-                  <td>Workshop</td>
-                  <td>12:56</td>
-                </tr>
-                <tr>
-                  <td>case.stl</td>
-                  <td>ASandberg</td>
-                  <td>Pending</td>
-                  <td>Pending</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h2> Place holder for user print history </h2>
+
+    </div>
+
+
+
 {% endblock %}
