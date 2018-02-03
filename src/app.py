@@ -69,7 +69,9 @@ class registerForm(FlaskForm):
 # APP ROUTES
 @app.route('/')
 def index():
-    return render_template('index.html')
+    printer_list = [['printer_1', 'Hackspace', 'OFFLINE'], ['printer_1',
+                                                            'Hackspace', 'OFFLINE'], ['printer_1', 'Hackspace', 'OFFLINE']]
+    return render_template('index.html', printer_list=printer_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
