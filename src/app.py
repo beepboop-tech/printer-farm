@@ -1,14 +1,14 @@
 # Imports for client
 import os
-from flask import Flask, render_template, redirect, url_for, request, flash
-from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
+from flask              import Flask, render_template, redirect, url_for, request, flash
+from flask_bootstrap    import Bootstrap
+from flask_wtf          import FlaskForm
+from wtforms            import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_sqlalchemy   import SQLAlchemy
+from werkzeug.security  import generate_password_hash, check_password_hash
+from werkzeug.utils     import secure_filename
+from flask_login        import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 
 # Imports for Octoprint
@@ -18,10 +18,10 @@ app = Flask(__name__)
 
 # App config for login and DB
 app.config['SECRET_KEY'] = 'helloworld'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/tpb/Documents/project_files/flaskTutorials/database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
 
 # Config for upload
-UPLOAD_FOLDER = '/home/tpb/Documents/project_files/flaskTutorials/static/uploads'
+UPLOAD_FOLDER      = './static/uploads'
 ALLOWED_EXTENSIONS = set(['g', 'gcode'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -35,20 +35,17 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-p = Printer('192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
+# p = Printer('192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
 
 # DB ENTRIES
-
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
 
+
 # FORM ENTRIES
-
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -66,9 +63,8 @@ class registerForm(FlaskForm):
         message='Invalid email'), Length(max=50)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
+
 # APP ROUTES
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -118,15 +114,15 @@ def upload_file():
         if 'file' not in request.files:
             flash('No file part')
             return ('no file uploaded')
-        file = request.files['file']
+        user_file = request.files['file']
         # if user does not select file, browser also
         # submit a empty part without filename
-        if file.filename == '':
+        if user_file.filename == '':
             flash('No selected file')
             return ('no file extension')
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if user_file and allowed_file(user_file.filename):
+            filename = secure_filename(user_file.filename)
+            user_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return filename
     return render_template('dashboard/upload.html')
 
@@ -140,4 +136,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-broke AF
