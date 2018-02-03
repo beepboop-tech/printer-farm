@@ -15,11 +15,14 @@ ps = [Printer('printer_1', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 
 # thread.start()
 #
 # j = Job('1', 'r', 'PLA')
-jj = Job('2', 'r', 'PLA')
+jj = Job('stepperspacer.gcode', 'r', 'PLA')
 
 # print(ps[0].status())
-print(ps[0].can_make(jj))
+printer = ps[0]
 
+print(printer.status())
+# if(printer.can_make(jj)):
+#     printer.make(jj)
 # time.sleep(2)
 # o.queue.put(j)
 # # time.sleep(3)

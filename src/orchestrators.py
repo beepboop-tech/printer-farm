@@ -22,6 +22,5 @@ class Orchestrator():
                     made = True
                     break
             if (not made):
-                print("Job", job.filename, " couldnt be made")
                 self.queue.put(job)
                 self.queue.task_done()
