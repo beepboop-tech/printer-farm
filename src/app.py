@@ -12,6 +12,8 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 
 from orchestrators import Orchestrator
 from printers import Printer
+from jobs import Job
+
 import threading
 app = Flask(__name__)
 
@@ -123,6 +125,8 @@ def allowed_file(filename):
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_file():
+    global orchestrator
+
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -136,7 +140,10 @@ def upload_file():
             return ('no file extension')
         if user_file and allowed_file(user_file.filename):
             filename = secure_filename(user_file.filename)
-            user_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            path     = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            user_file.save(path)
+            new_job = Job(path, 'black', 'PLA')
+            orchestrator.queue.put(new_job)
             return filename
     return render_template('dashboard/upload.html')
 

@@ -62,10 +62,10 @@ class Printer():
         if (stat['state']['text'] == 'Offline'):
             return False
 
-        if (stat['state']['printing'] == 'true'):
+        if (stat['state']['flags']['printing'] == 'true'):
             return False
 
-        if (stat['state'['ready']] == 'false'):
+        if (stat['state']['flags']['ready'] == 'false'):
             return False
 
         return True
