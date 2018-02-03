@@ -38,7 +38,6 @@ Upload
             <li class="active"><a href="/upload">Uploads<span class="sr-only">(current)</span></a></li>
             <li><a href="/history">History</a></li>
             <li><a href="/profile">Profile</a></li>
-            <li><a href="/settings">Settings</a></li>
           </ul>
         </div>
       </div>
@@ -55,9 +54,9 @@ Upload
                 <form method=post enctype=multipart/form-data>
                     <div class = "form-group">
                         <label for="selectFile">Upload .gcode File</label>
-                        <input type="file" class="form-control-file" id="selectFile">
+                        <input type="file" name='file' class="form-control-file" id="selectFile" />
                         <p></p>
-                        <input type=submit name =upload id="submitFile"></input>
+                        <input type="submit" name ="submit" value="Upload" />
                     </div>
                 </form>
 
