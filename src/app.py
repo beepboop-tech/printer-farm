@@ -37,15 +37,19 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 printers = [
-            Printer('printer_1', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'Hackspace', 'duplicator', 'PLA', 'black'),
-            Printer('printer_2', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A','Hackspace', 'Ultimaker 2+', 'PLA', 'red')
-            ]
+    Printer('printer_1', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
+            'Hackspace', 'duplicator', 'PLA', 'black'),
+    Printer('printer_2', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
+            'Hackspace', 'Ultimaker 2+', 'PLA', 'red')
+]
 orchestrator = Orchestrator(printers)
 
-worker_thread  = threading.Thread(target=orchestrator.run)
+worker_thread = threading.Thread(target=orchestrator.run)
 worker_thread.start()
 
 # DB ENTRIES
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
@@ -82,7 +86,7 @@ def index():
     for printer in printers:
         printer_info.append([printer.name, printer.location, printer.simple_status()])
     # printer_list = [['printer_1', 'Hackspace', 'OFFLINE'], ['printer_1',
-                                                            # 'Hackspace', 'OFFLINE'], ['printer_1', 'Hackspace', 'OFFLINE']]
+        # 'Hackspace', 'OFFLINE'], ['printer_1', 'Hackspace', 'OFFLINE']]
     return render_template('index.html', printer_list=printer_info)
 
 
@@ -157,7 +161,7 @@ def settings():
 @app.route('/history')
 @login_required
 def history():
-    return render_template('dashboard/history.html')
+    return render_template('dashboard/history.html',  name=current_user.username)
 
 
 @app.route('/profile')
