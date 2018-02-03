@@ -32,7 +32,7 @@ Demo App
     </nav>
 
     <div class="container">
-        <p></p>
+        <!-- <p></p>
         <table class="table table-bordered">
             <col width="60%">
             <col width = "40%">
@@ -87,8 +87,33 @@ Demo App
       <td>OFFLINE</td>
     </tr>
     </tbody>
-    </table>
-</div>
+    </table> -->
 
+
+</div>
+<p></p>
+<table class="table table-bordered">
+   <col width="60%">
+   <col width = "40%">
+<thead>
+<tr>
+<th colspan="2"><h2>Available printers</h2></th>
+</tr>
+</thead>
+<tbody>
+  <tr>
+    <th scope="row">Printer</th>
+    <th scope="row">Location</th>
+    <th scope="row">Status</th>
+  </tr>
+ {% for printer in printer_list %}
+  <tr>
+      <td>{{ printer[0] }}</td>
+      <td>{{ printer[1] }}</td>
+      <td>{{ printer[2] }}</td>
+  </tr>
+{% endfor %}
+</tbody>
+</table>
 
 {% endblock %}

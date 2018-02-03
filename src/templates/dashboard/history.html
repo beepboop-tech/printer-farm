@@ -1,7 +1,7 @@
 {% extends "bootstrap/base.html" %}
 
 {% block title %}
-Upload
+History
 {% endblock %}
 
 {% block styles %}
@@ -35,8 +35,8 @@ Upload
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li><a href="/dashboard">Print Queue</a></li>
-            <li class="active"><a href="/upload">Uploads<span class="sr-only">(current)</span></a></li>
-            <li><a href="/history">History</a></li>
+            <li><a href="/upload">Uploads</a></li>
+            <li class="active"><a href="/history">History<span class="sr-only">(current)</span></a></li>
             <li><a href="/profile">Profile</a></li>
             <li><a href="/settings">Settings</a></li>
           </ul>
@@ -44,30 +44,9 @@ Upload
       </div>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <img src="./static/images/upload_img.jpg" alt="Upload image" width="250">
-            <br>
-            <br>
-                <form method=post enctype=multipart/form-data>
-                    <div class = "form-group">
-                        <label for="selectFile">Upload .gcode File</label>
-                        <input type="file" class="form-control-file" id="selectFile">
-                        <p></p>
-                        <input type=submit name =upload id="submitFile"></input>
-                    </div>
-                </form>
+        <h2> Place holder for user print history </h2>
 
-        </div>
-
-
-
-
-
-
-
-
-
-
-
+    </div>
 
 
 

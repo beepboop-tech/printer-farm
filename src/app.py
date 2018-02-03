@@ -1,18 +1,18 @@
 # Imports for client
 import os
-from flask              import Flask, render_template, redirect, url_for, request, flash
-from flask_bootstrap    import Bootstrap
-from flask_wtf          import FlaskForm
-from wtforms            import StringField, PasswordField, BooleanField
+from flask import Flask, render_template, redirect, url_for, request, flash
+from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
-from flask_sqlalchemy   import SQLAlchemy
-from werkzeug.security  import generate_password_hash, check_password_hash
-from werkzeug.utils     import secure_filename
-from flask_login        import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 
 # Imports for Octoprint
-from printers import Printer
+#from printers import Printer
 
 app = Flask(__name__)
 
@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'helloworld'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
 
 # Config for upload
-UPLOAD_FOLDER      = './static/uploads'
+UPLOAD_FOLDER = './static/uploads'
 ALLOWED_EXTENSIONS = set(['g', 'gcode'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -38,6 +38,8 @@ login_manager.login_view = 'login'
 # p = Printer('192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
 
 # DB ENTRIES
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
@@ -67,7 +69,9 @@ class registerForm(FlaskForm):
 # APP ROUTES
 @app.route('/')
 def index():
-    return render_template('index.html')
+    printer_list = [['printer_1', 'Hackspace', 'OFFLINE'], ['printer_1',
+                                                            'Hackspace', 'OFFLINE'], ['printer_1', 'Hackspace', 'OFFLINE']]
+    return render_template('index.html', printer_list=printer_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -125,6 +129,24 @@ def upload_file():
             user_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return filename
     return render_template('dashboard/upload.html')
+
+
+@app.route('/settings')
+@login_required
+def settings():
+    return render_template('dashboard/settings.html')
+
+
+@app.route('/history')
+@login_required
+def history():
+    return render_template('dashboard/history.html')
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('dashboard/profile.html')
 
 
 @app.route('/logout')
