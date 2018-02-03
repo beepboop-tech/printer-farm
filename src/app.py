@@ -10,10 +10,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
-
-# Imports for Octoprint
-#from printers import Printer
-
+from orchestrators import Orchestrator
+from printers import Printer
+import threading
 app = Flask(__name__)
 
 # App config for login and DB
@@ -35,11 +34,16 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# p = Printer('192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
+printers = [
+            Printer('printer_1', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'Hackspace', 'duplicator', 'PLA', 'black'),
+            Printer('printer_2', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A','Hackspace', 'Ultimaker 2+', 'PLA', 'red')
+            ]
+orchestrator = Orchestrator(printers)
+
+worker_thread  = threading.Thread(target=orchestrator.run)
+worker_thread.start()
 
 # DB ENTRIES
-
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
@@ -69,9 +73,15 @@ class registerForm(FlaskForm):
 # APP ROUTES
 @app.route('/')
 def index():
-    printer_list = [['printer_1', 'Hackspace', 'OFFLINE'], ['printer_1',
-                                                            'Hackspace', 'OFFLINE'], ['printer_1', 'Hackspace', 'OFFLINE']]
-    return render_template('index.html', printer_list=printer_list)
+    global printers
+    global orchestrator
+
+    printer_info = []
+    for printer in printers:
+        printer_info.append([printer.name, printer.location, printer.simple_status()])
+    # printer_list = [['printer_1', 'Hackspace', 'OFFLINE'], ['printer_1',
+                                                            # 'Hackspace', 'OFFLINE'], ['printer_1', 'Hackspace', 'OFFLINE']]
+    return render_template('index.html', printer_list=printer_info)
 
 
 @app.route('/login', methods=['GET', 'POST'])

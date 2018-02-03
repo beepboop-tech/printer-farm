@@ -9,14 +9,7 @@ class Printer():
     Handels the API calls to octoprint.
     """
 
-<<<<<<< HEAD
-    def __init__(self, hostname, api_key, location, printer_type, material_type, material_colour):
-        self.url = 'http://' + hostname
-        self.headers = {'X-Api-Key': api_key}
-        self.location = location
-        self.printer_type = printer_type
-        self.material_type = material_type
-=======
+
     def __init__(self, name, hostname, api_key, location, printer_type, material_type, material_colour):
         self.name            = name
         self.url             = 'http://' + hostname
@@ -24,7 +17,6 @@ class Printer():
         self.location        = location
         self.printer_type    = printer_type
         self.material_type   = material_type
->>>>>>> 13c8e2e5868ab3c7d26834f88e697e655096cc9e
         self.material_colour = material_colour
 
     def api_get(self, endpoint):
@@ -53,6 +45,9 @@ class Printer():
                 }
             }
             }
+    def simple_status(self):
+        full_stat = self.status()
+        return full_stat['state']['text']
 
     def can_make(self, job: Job):
         # TODO: Check that this works with a functional printer
@@ -93,13 +88,3 @@ class Printer():
         self.upload_file(job.filename)
         # Select the file
         # Start the job
-<<<<<<< HEAD
-=======
-
-
-
-# p = Printer('192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'q', 'r', 'PLA', 'black')
-# print(p.status())
-# # print(p.local_files())
-# # print(p.upload_file('test_upload.g'))
->>>>>>> 13c8e2e5868ab3c7d26834f88e697e655096cc9e
