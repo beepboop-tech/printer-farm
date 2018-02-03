@@ -11,16 +11,22 @@ ps = [Printer('printer_1', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 
 
 o = Orchestrator(ps)
 
-threads = []
 thread  = threading.Thread(target=o.run)
-threads.append(thread)
 thread.start()
 
 j = Job('1', 'r', 'PLA')
 jj = Job('2', 'r', 'PLA')
 
 
-time.sleep(2)
-o.queue.put(j)
-time.sleep(3)
-o.queue.put(jj)
+# time.sleep(2)
+# o.queue.put(j)
+# # time.sleep(3)
+# o.queue.put(jj)
+# # o.queue.put(jj)
+# # o.queue.put(jj)
+# time.sleep(1)
+#
+#
+# print(o.jobs)
+# time.sleep(1)
+# o.queue.queue.clear()

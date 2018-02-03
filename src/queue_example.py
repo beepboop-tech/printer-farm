@@ -16,6 +16,8 @@ def do_stuff(q):
 q = Queue(maxsize=0)
 
 for x, b in zip(['1','2','3','4'], [True, False, True, True]):
-  q.put(Job(x, b, 'b'))
+    q.put(Job(x, b, 'b'))
 
-do_stuff(q)
+
+print(q.queue)
+# do_stuff(q)
