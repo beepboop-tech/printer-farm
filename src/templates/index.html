@@ -10,54 +10,51 @@ Demo App
 {% endblock %}
 
 {% block content %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Bristol 3D print services</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav pull-right">
-            <li class="active"><a href="#">Service status</a></li>
-            <li><a href="{{ url_for('login') }}">Login</a></li>
-            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-    <div class="container">
-
-
-<p></p>
-<table class="table table-bordered">
-   <col width="40%">
-   <col width = "30%">
-   <col width = "30%">
-<thead>
-<tr>
-<th colspan="3"><h2>Available printers</h2></th>
-</tr>
-</thead>
-<tbody>
-  <tr>
-    <th scope="row">Printer</th>
-    <th scope="row">Location</th>
-    <th scope="row">Status</th>
-  </tr>
- {% for printer in printer_list %}
-  <tr>
-      <td>{{ printer[0] }}</td>
-      <td>{{ printer[1] }}</td>
-      <td>{{ printer[2] }}</td>
-  </tr>
-{% endfor %}
-</tbody>
-</table>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Bristol 3D print services</a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav pull-right">
+        <li class="active"><a href="#">Service status</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+<div class="container">
+    <p></p>
+    <table class="table table-bordered">
+       <col width="40%">
+       <col width = "30%">
+       <col width = "30%">
+        <thead>
+        <tr>
+        <th colspan="3"><h2>Available printers</h2></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">Printer</th>
+                <th scope="row">Location</th>
+                <th scope="row">Status</th>
+            </tr>
+            {% for printer in printer_list %}
+            <tr>
+              <td>{{ printer[0] }}</td>
+              <td>{{ printer[1] }}</td>
+              <td>{{ printer[2] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

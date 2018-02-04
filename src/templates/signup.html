@@ -20,9 +20,7 @@ Sign Up
         {% endfor %}
     {% endif %}
 {% endwith %}
-
 <div class="container">
-
   <form class="form-signin" method="POST" action ="/signup">
     <h2 class="form-signin-heading">Sign Up</h2>
     {{ form.hidden_tag() }}
@@ -33,7 +31,5 @@ Sign Up
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
     <a href="/login" class="btn btn-lg btn-primary btn-block">Go to login</a>
   </form>
-
-
 </div> <!-- /container -->
 {% endblock %}

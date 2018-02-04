@@ -10,80 +10,86 @@ Upload
 {% endblock %}
 
 {% block content %}
-
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Bristol 3D print services</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href= "{{ url_for('logout') }}">Log Out</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li><a href="/dashboard">Print Queue</a></li>
-            <li class="active"><a href="/upload">Uploads<span class="sr-only">(current)</span></a></li>
-            <li><a href="/history">History</a></li>
-            <li><a href="/profile">Profile</a></li>
-          </ul>
-        </div>
-      </div>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Bristol 3D print services</a>
     </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        {%  with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-info alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span>&times;</button>
-                        {{message}}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <div>
-            <h2 class="sub-header">File upload</h2>
-            Upload your file below to add it to the print queue
-        </div>
-        <br>
-            <img src="./static/images/upload_img.jpg" alt="Upload image" width="250">
-            <br>
-            <br>
-                <form method=post enctype=multipart/form-data>
-                    <div class = "form-group">
-                        <label for="selectFile">Upload .gcode File</label>
-                        <input type="file" name='file' class="form-control-file" id="selectFile" />
-                        <p></p>
-                        <input type="submit" name ="submit" value="Upload" />
-                    </div>
-                </form>
-
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href= "{{ url_for('logout') }}">Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li><a href="/dashboard">Print Queue</a></li>
+        <li class="active"><a href="/upload">Uploads<span class="sr-only">(current)</span></a></li>
+        <li><a href="/history">History</a></li>
+        <li><a href="/profile">Profile</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    {%  with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span>&times;</button>
+                    {{message}}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div>
+        <h2>Select filament colour and material</h2>
+            <form>
+              <div class="form-group">
+                <label for="sel1">Select colour</label>
+                <select class="form-control" id="sel1">
+                  <option value="red">Red</option>
+                  <option value="grey">Grey</option>
+                  <option value="black">Black</option>
+                  <option value="black">Any</option>
+                </select>
+              </div>
+            </form>
+            <p></p>
+            <form>
+              <div class="form-group">
+                <label for="sel1">Select material</label>
+                <select class="form-control" id="sel1">
+                  <option value="PLA">PLA</option>
+                  <option value="ABS">ABS</option>
+                  <option value="ABS">Any</option>
+                </select>
+              </div>
+            </form>
+        <h2 class="sub-header">File upload</h2>
+        Upload your file below to add it to the print queue
+    </div>
+    <br>
+    <img src="./static/images/upload_img.jpg" alt="Upload image" width="250">
+    <br>
+    <br>
+        <form method=post enctype=multipart/form-data>
+            <div class = "form-group">
+                <label for="selectFile">Upload .gcode File</label>
+                <input type="file" name='file' class="form-control-file" id="selectFile" />
+                <p></p>
+            </div>
+            <input type="submit" name ="submit" value="Upload" />
+        </form>
+</div>
 {% endblock %}
