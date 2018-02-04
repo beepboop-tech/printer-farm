@@ -9,8 +9,18 @@ Sign Up
 {{super()}}
 <link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
 {% endblock %}
-
 {% block content %}
+{%  with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissable" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span>&times;</button>
+                {{message}}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
 <div class="container">
 
   <form class="form-signin" method="POST" action ="/signup">
@@ -21,7 +31,9 @@ Sign Up
     {{ wtf.form_field(form.faculty) }}
     {{ wtf.form_field(form.password) }}
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+    <a href="/login" class="btn btn-lg btn-primary btn-block">Go to login</a>
   </form>
+
 
 </div> <!-- /container -->
 {% endblock %}

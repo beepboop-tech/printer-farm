@@ -56,7 +56,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
-    faculty = db.Column(db.String(20), unique=True)
+    faculty = db.Column(db.String(80))
     password = db.Column(db.String(80))
 
 
@@ -76,22 +76,24 @@ class registerForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     email = StringField('email', validators=[InputRequired(), Email(
         message='Invalid email'), Length(max=50)])
-    faculty = StringField('faculty', validators=[InputRequired(), Length(max=20)])
+    faculty = StringField('faculty', validators=[InputRequired(), Length(max=80)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+
+
+def make_printer_info():
+    global printers
+
+    printer_info = []
+    for printer in printers:
+        printer_info.append([printer.name, printer.location, printer.simple_status()])
+    return printer_info
 
 
 # APP ROUTES
 @app.route('/')
 def index():
-    global printers
-    global orchestrator
 
-    printer_info = []
-    for printer in printers:
-        printer_info.append([printer.name, printer.location, printer.simple_status()])
-    # printer_list = [['printer_1', 'Hackspace', 'OFFLINE'], ['printer_1',
-        # 'Hackspace', 'OFFLINE'], ['printer_1', 'Hackspace', 'OFFLINE']]
-    return render_template('index.html', printer_list=printer_info)
+    return render_template('index.html', printer_list=make_printer_info())
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -116,7 +118,8 @@ def signup():
                         email=form.email.data, faculty=form.faculty.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        return '<h1> New user created </h1>'
+        flash('New user created')
+        return render_template('signup.html', form=form)
     return render_template('signup.html', form=form)
 
 def make_jobs_list():
@@ -175,12 +178,17 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            return ("No file part")
+            flash("No file part")
+            return render_template('dashboard/upload.html')
         user_file = request.files['file']
         # if user does not select file, browser also
         # submit a empty part without filename
         if user_file.filename == '':
-            return ('no file extension')
+            flash("No file extension")
+            return render_template('dashboard/upload.html')
+        if not allowed_file(user_file.filename):
+            flash("Invalid file extension")
+            return render_template('dashboard/upload.html')
         if user_file and allowed_file(user_file.filename):
             filename = secure_filename(user_file.filename)
             path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -194,7 +202,8 @@ def upload_file():
             #     q_lock.release()
             # return filename
             orchestrator.queue.put(new_job)
-
+            flash("File uploaded succesfully")
+            return render_template('dashboard/upload.html')
     return render_template('dashboard/upload.html')
 
 
