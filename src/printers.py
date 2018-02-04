@@ -9,7 +9,6 @@ class Printer():
     Handels the API calls to octoprint.
     """
 
-
     def __init__(self, name, hostname, api_key, location, printer_type, material_type, material_colour):
         self.name               = name
         self.url                = 'http://' + hostname
@@ -89,6 +88,26 @@ class Printer():
         self.upload_file(job.filename)
         requests.post(self.url+'/api/files/local/'+job.filename.split('/')[-1], headers=self.headers, json={"command": "select", "print":"true"})
         self.currently_printing = job
+
+    def get_printing_info(self):
+        status = self.simple_status()
+
+        if (status == 'Printing'):
+            job_info = self.api_get('/api/job')
+            if job_info is not None:
+                # time_rem = str(int(job_info["progress"]["printTimeLeft"]) // 60)
+                time_rem = str(int('498') // 60)
+                self.time_remaining = time_rem + " mins"
+            else:
+                self.time_remaining = '-'
+
+
+        elif (status == 'Operational'):
+            self.currently_printing.time_remaining = '-'
+            self.currently_printing = None
+
+        return self.currently_printing.time_remaining
+
 
     def cancel(self):
         requests.post(self.url+'/api/job', headers=self.headers, json={"command": "cancel"})

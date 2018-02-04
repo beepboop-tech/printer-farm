@@ -16,7 +16,11 @@ from orchestrators import Orchestrator
 from printers import Printer
 from jobs import Job
 
-from mutexes import q_lock
+from queue import Queue
+
+waiting_q = Queue(maxsize=0)
+printing_q = Queue(maxsize=0)
+
 
 import threading
 app = Flask(__name__)
@@ -42,13 +46,14 @@ login_manager.login_view = 'login'
 
 printers = [
     Printer('Duplicator i3', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
+
             'Hackspace', 'duplicator', 'PLA', 'black')  # ,
     # Printer('Ultimaker 2+', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
     #         'Hackspace', 'Ultimaker 2+', 'PLA', 'red')
 ]
 orchestrator = Orchestrator(printers)
 
-worker_thread = threading.Thread(target=orchestrator.run)
+worker_thread = threading.Thread(target=orchestrator.run, args=(waiting_q, printing_q, ))
 worker_thread.start()
 
 # ADMIN
@@ -110,8 +115,6 @@ class registerForm(FlaskForm):
 
 
 def make_printer_info():
-    global printers
-
     printer_info = []
     for printer in printers:
         printer_info.append([printer.name, printer.location, printer.simple_status()])
@@ -163,36 +166,16 @@ def signup():
 
 
 def make_jobs_list():
-    global orchestrator
-    global printers
 
-    # job_list = [['Dildo.g', 'tpbadger','hackspace',  '10 mins'],['Dildo.g', 'tpbadger','hackspace',  '10 mins']]
+    unformatted_jobs = list(printing_q.queue) + list(waiting_q.queue)  # TODO: Is this right?
 
-    # q_lock.acquire()
-    # try:
-    #     printing = list(orchestrator.printing_queue.queue)
-    # finally:
-    #     q_lock.release()
-
-    printing = list(orchestrator.printing_queue.queue)
-
-    job_list = [[job.filename.split('/')[-1], job.user.username,
-                 job.location, 'todo: ETA'] for job in printing]
-
-    # for printer in printers:
-    #     current_job =  printer.currently_printing
-    #     if current_job is not None:
-    #         job_list.append([current_job.filename.split('/')[-1], current_job.user.username, current_job.location, 'todo: ETA'])
-
-    # q_lock.acquire()
-    # try:
-    #     for job in list(orchestrator.queue.queue):
-    #         job_list.append([job.filename.split('/')[-1], job.user.username, job.location, 'todo: ETA'])
-    # finally:
-    #     q_lock.release()
-
-    for job in list(orchestrator.queue.queue):
-        job_list.append([job.filename.split('/')[-1], job.user.username, job.location, 'todo: ETA'])
+    job_list = []
+    for job in unformatted_jobs:
+        if job.time_remaining is not 'Pending':
+            new_time = str(int(job.time_remaining.split(' ')[0]) - 1) + " mins"
+            job.time_remaining = new_time
+        job_list.append([job.filename.split('/')[-1], job.user.username,
+                         job.location, job.time_remaining])
 
     return job_list
 
@@ -210,7 +193,6 @@ def allowed_file(filename):
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_file():
-    global orchestrator
 
     if request.method == 'POST':
         # check if the post request has the file part
@@ -232,13 +214,8 @@ def upload_file():
             user_file.save(path)
             new_job = Job(path, 'black', 'PLA', current_user)
 
-            # q_lock.acquire()
-            # try:
-            #     orchestrator.queue.put(new_job)
-            # finally:
-            #     q_lock.release()
-            # return filename
-            orchestrator.queue.put(new_job)
+            waiting_q.put(new_job)
+
             flash("File uploaded succesfully")
             return render_template('dashboard/upload.html')
     return render_template('dashboard/upload.html')
