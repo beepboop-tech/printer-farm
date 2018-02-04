@@ -42,9 +42,9 @@ login_manager.login_view = 'login'
 
 printers = [
     Printer('Duplicator i3', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
-            'Hackspace', 'duplicator', 'PLA', 'black'),
-    Printer('Ultimaker 2+', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
-            'Hackspace', 'Ultimaker 2+', 'PLA', 'red')
+            'Hackspace', 'duplicator', 'PLA', 'black')  # ,
+    # Printer('Ultimaker 2+', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
+    #         'Hackspace', 'Ultimaker 2+', 'PLA', 'red')
 ]
 orchestrator = Orchestrator(printers)
 
@@ -53,7 +53,7 @@ worker_thread.start()
 
 # ADMIN
 
-admin = Admin(app)
+admin = admin = Admin(app)
 
 # DB ENTRIES
 
@@ -68,20 +68,24 @@ class User(UserMixin, db.Model):
 
 class Printers(BaseView):
     @expose('/')
-    def index(self):
-        return self.render('admin/printers.html')
+    def printers(self):
+        return self.render('/admin/printers.html', printer_list=make_printer_advanced_info())
 
 
 class jobQueue(BaseView):
     @expose('/')
-    def index(self):
-        return self.render('admin/jobQueue.html')
+    def jobqueue(self):
+        return self.render('/admin/jobQueue.html', job_list=make_jobs_list())
+
+# class IFrame(BaseView):
+#     @expose('/iframe/')
+#     def index(self):
+#         return self.render('admin/iframe.html', printers)
 
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(Printers(name='Printers', endpoint='printers'))
 admin.add_view(jobQueue(name='Job Queue', endpoint='jobQueue'))
-
 
 # FORM ENTRIES
 
@@ -114,10 +118,19 @@ def make_printer_info():
     return printer_info
 
 
+def make_printer_advanced_info():
+    global printers
+
+    printer_info = []
+    for printer in printers:
+        printer_info.append([printer.name, printer.location, printer.simple_status(), printer.url])
+    return printer_info
+
 # APP ROUTES
+
+
 @app.route('/')
 def index():
-
     return render_template('index.html', printer_list=make_printer_info())
 
 
