@@ -1,0 +1,17 @@
+{% extends 'admin/master.html' %}
+
+{% block title %}
+Job queue
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
+{% endblock %}
+
+{% block body %}
+<p></p>
+<h1 class="page-header">Welcome, </h1>
+This is the Admin console. From here you can manage users of the 3D print service, monitor printers on the network, and manage current jobs.
+
+{% endblock body %}
