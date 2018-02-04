@@ -11,6 +11,18 @@ Login
 {% endblock %}
 
 {% block content %}
+
+{%  with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissable" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span>&times;</button>
+                {{message}}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
     <div class="container">
 
       <form class="form-signin" method="POST" action="/login">

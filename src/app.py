@@ -130,7 +130,8 @@ def login():
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('dashboard'))
-        return '<h1> Invalid username or pasword </h1>'
+        flash('Invalid username or password')
+        return render_template('login.html', form=form)
     return render_template('login.html', form=form)
 
 
@@ -147,6 +148,7 @@ def signup():
         return render_template('signup.html', form=form)
     return render_template('signup.html', form=form)
 
+
 def make_jobs_list():
     global orchestrator
     global printers
@@ -161,9 +163,8 @@ def make_jobs_list():
 
     printing = list(orchestrator.printing_queue.queue)
 
-
-
-    job_list = [[job.filename.split('/')[-1], job.user.username, job.location, 'todo: ETA'] for job in printing]
+    job_list = [[job.filename.split('/')[-1], job.user.username,
+                 job.location, 'todo: ETA'] for job in printing]
 
     # for printer in printers:
     #     current_job =  printer.currently_printing
@@ -179,8 +180,6 @@ def make_jobs_list():
 
     for job in list(orchestrator.queue.queue):
         job_list.append([job.filename.split('/')[-1], job.user.username, job.location, 'todo: ETA'])
-
-
 
     return job_list
 
