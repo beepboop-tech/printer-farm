@@ -11,13 +11,14 @@ class Printer():
 
 
     def __init__(self, name, hostname, api_key, location, printer_type, material_type, material_colour):
-        self.name            = name
-        self.url             = 'http://' + hostname
-        self.headers         = {'X-Api-Key': api_key}
-        self.location        = location
-        self.printer_type    = printer_type
-        self.material_type   = material_type
-        self.material_colour = material_colour
+        self.name               = name
+        self.url                = 'http://' + hostname
+        self.headers            = {'X-Api-Key': api_key}
+        self.location           = location
+        self.printer_type       = printer_type
+        self.material_type      = material_type
+        self.material_colour    = material_colour
+        self.currently_printing = None
 
     def api_get(self, endpoint):
         r = requests.get(self.url + endpoint, headers=self.headers)
@@ -62,10 +63,10 @@ class Printer():
         if (stat['state']['text'] == 'Offline'):
             return False
 
-        if (stat['state']['flags']['printing'] == 'true'):
+        if (stat['state']['flags']['printing'] == True):
             return False
 
-        if (stat['state']['flags']['ready'] == 'false'):
+        if (stat['state']['flags']['ready'] == False):
             return False
 
         return True
@@ -84,11 +85,10 @@ class Printer():
         """
         Sends the required files and settings to the printer
         """
+
         self.upload_file(job.filename)
-        # print(job.filename.split('/')[-1])  #  TODO: Check that this works when app works
         requests.post(self.url+'/api/files/local/'+job.filename.split('/')[-1], headers=self.headers, json={"command": "select", "print":"true"})
-        # print(self.url+'/api/files/local/'+job.filename.split('/')[-1])
-        # Select the file
-        # Start the job
+        self.currently_printing = job
+
     def cancel(self):
         requests.post(self.url+'/api/job', headers=self.headers, json={"command": "cancel"})

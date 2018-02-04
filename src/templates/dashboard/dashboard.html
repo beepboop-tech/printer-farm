@@ -55,24 +55,15 @@ Dashboard
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>dildo.stl</td>
-                  <td>TEvans</td>
-                  <td>Hackspace</td>
-                  <td>10:34</td>
-                </tr>
-                <tr>
-                  <td>bracket.stl</td>
-                  <td>TBadger</td>
-                  <td>Workshop</td>
-                  <td>12:56</td>
-                </tr>
-                <tr>
-                  <td>case.stl</td>
-                  <td>ASandberg</td>
-                  <td>Pending</td>
-                  <td>Pending</td>
-                </tr>
+
+                  {% for job in job_list %}
+                   <tr>
+                       <td>{{ job[0] }}</td>
+                       <td>{{ job[1] }}</td>
+                       <td>{{ job[2] }}</td>
+                       <td>{{ job[3] }}</td>
+                   </tr>
+                 {% endfor %}
               </tbody>
             </table>
           </div>
