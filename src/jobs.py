@@ -7,3 +7,4 @@ class Job():
         self.material = material
         self.user     = user
         self.location = 'Pending'
+        self.time_remaining = 'Pending'
