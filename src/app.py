@@ -14,6 +14,8 @@ from orchestrators import Orchestrator
 from printers import Printer
 from jobs import Job
 
+from mutexes import q_lock
+
 import threading
 app = Flask(__name__)
 
@@ -117,11 +119,48 @@ def signup():
         return '<h1> New user created </h1>'
     return render_template('signup.html', form=form)
 
+def make_jobs_list():
+    global orchestrator
+    global printers
+
+    # job_list = [['Dildo.g', 'tpbadger','hackspace',  '10 mins'],['Dildo.g', 'tpbadger','hackspace',  '10 mins']]
+
+    # q_lock.acquire()
+    # try:
+    #     printing = list(orchestrator.printing_queue.queue)
+    # finally:
+    #     q_lock.release()
+
+    printing = list(orchestrator.printing_queue.queue)
+
+
+
+    job_list = [[job.filename.split('/')[-1], job.user.username, job.location, 'todo: ETA'] for job in printing]
+
+    # for printer in printers:
+    #     current_job =  printer.currently_printing
+    #     if current_job is not None:
+    #         job_list.append([current_job.filename.split('/')[-1], current_job.user.username, current_job.location, 'todo: ETA'])
+
+    # q_lock.acquire()
+    # try:
+    #     for job in list(orchestrator.queue.queue):
+    #         job_list.append([job.filename.split('/')[-1], job.user.username, job.location, 'todo: ETA'])
+    # finally:
+    #     q_lock.release()
+
+    for job in list(orchestrator.queue.queue):
+        job_list.append([job.filename.split('/')[-1], job.user.username, job.location, 'todo: ETA'])
+
+
+
+    return job_list
+
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard/dashboard.html', name=current_user.username)
+    return render_template('dashboard/dashboard.html', name=current_user.username, job_list=make_jobs_list())
 
 
 def allowed_file(filename):
@@ -146,9 +185,16 @@ def upload_file():
             filename = secure_filename(user_file.filename)
             path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             user_file.save(path)
-            new_job = Job(path, 'black', 'PLA')
+            new_job = Job(path, 'black', 'PLA', current_user)
+
+            # q_lock.acquire()
+            # try:
+            #     orchestrator.queue.put(new_job)
+            # finally:
+            #     q_lock.release()
+            # return filename
             orchestrator.queue.put(new_job)
-            return filename
+
     return render_template('dashboard/upload.html')
 
 

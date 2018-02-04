@@ -5,8 +5,13 @@ import threading
 import time
 
 
-ps = [Printer('printer_1', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'MVB', 'rep', 'PLA', 'r'),
-      Printer('printer_2', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A','MVB', 'rep', 'PLA', 'r')]
+
+class TestUser():
+    def __init__(self):
+        self.username = 'tom'
+
+p = Printer('Duplicator i3', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
+        'Hackspace', 'duplicator', 'PLA', 'black')
 
 
 # o = Orchestrator(ps)
@@ -15,12 +20,12 @@ ps = [Printer('printer_1', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 
 # thread.start()
 #
 # j = Job('1', 'r', 'PLA')
-jj = Job('stepperspacer.gcode', 'r', 'PLA')
+job = Job('stepperspacer.gcode', 'black', 'PLA', user=TestUser())
 
-# print(ps[0].status())
-printer = ps[0]
+print(p.cancel())
+# printer = ps[0]
 
-print(printer.status())
+# print(printer.cancel())
 # if(printer.can_make(jj)):
 #     printer.make(jj)
 # time.sleep(2)
