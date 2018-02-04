@@ -1,0 +1,39 @@
+{% extends 'admin/master.html' %}
+
+{% block title %}
+Printers
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
+{% endblock %}
+
+{% block body %}
+
+<!-- <table class="table table-bordered">
+   <col width="40%">
+   <col width = "30%">
+   <col width = "30%">
+<thead>
+<tr>
+<th colspan="3"><h2>Available printers</h2></th>
+</tr>
+</thead>
+<tbody>
+  <tr>
+    <th scope="row">Printer</th>
+    <th scope="row">Stats</th>
+    <th scope="row">View console</th>
+  </tr>
+ {% for printer in printer_list %} #<! TODO: update list passed in to include job queue from client -->
+  <!-- <tr>
+      <td>{{ printer[0] }}</td>
+      <td>{{ printer[1] }}</td>
+      <td>{{ printer[2] }}</td>
+  </tr> -->
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock body %}

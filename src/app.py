@@ -9,6 +9,8 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_admin import Admin, BaseView, expose
+from flask_admin.contrib.sqla import ModelView
 
 from orchestrators import Orchestrator
 from printers import Printer
@@ -47,6 +49,10 @@ orchestrator = Orchestrator(printers)
 worker_thread = threading.Thread(target=orchestrator.run)
 worker_thread.start()
 
+# ADMIN
+
+admin = Admin(app)
+
 # DB ENTRIES
 
 
@@ -58,7 +64,26 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
 
 
+class Printers(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/printers.html')
+
+
+class jobQueue(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/jobQueue.html')
+
+
+admin.add_view(ModelView(User, db.session))
+admin.add_view(Printers(name='Printers', endpoint='printers'))
+admin.add_view(jobQueue(name='Job Queue', endpoint='jobQueue'))
+
+
 # FORM ENTRIES
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
