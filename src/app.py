@@ -45,11 +45,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 printers = [
-    Printer('Duplicator i3', '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
-            'Hackspace', 'duplicator', 'PLA', 'black'),
-    Printer('Ultimaker 2+', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
-            'Hackspace', 'Ultimaker 2+', 'PLA', 'grey'),
-    Printer()
+    Printer('Duplicator i3',    '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'Hackspace', 'duplicator',   'PLA', 'black'),
+    Printer('Ultimaker 2+ (1)', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A', 'Hackspace', 'Ultimaker 2+', 'PLA', 'grey'),
+    Printer('Ultimaker 2+ (2)', '192.168.0.203', 'E5CDD2F0EF354BA4A45241D5F1203BEC', 'Hackspace', 'Ultimaker 2+', 'PLA', 'any')
 ]
 orchestrator = Orchestrator(printers)
 
@@ -174,8 +172,14 @@ def make_jobs_list():
         if job.time_remaining is not 'Pending':
             new_time = str(int(job.time_remaining.split(' ')[0]) - 1) + " mins"
             job.time_remaining = new_time
+
+        printer = job.printing_on
+        if (printer == None):
+            stream_url = '#'
+        else:
+            stream_url = printer.url + '/webcam/?action=stream'
         job_list.append([job.filename.split('/')[-1], job.user.username,
-                         job.location, job.time_remaining])
+                         job.location, job.time_remaining, stream_url])
 
     return job_list
 
@@ -241,4 +245,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0')

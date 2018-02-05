@@ -53,7 +53,7 @@ class Printer():
         # TODO: Check that this works with a functional printer
 
         # Check the material and colour are correct
-        if (self.material_type != job.material or self.material_colour != job.colour):
+        if (self.material_type != job.material):
             return False
 
         # Get the printer status
@@ -74,7 +74,6 @@ class Printer():
         # TODO: this  is not safe if the printer is offline
         return self.api_get('/api/files/local')
 
-        # {'files': []}
 
     def upload_file(self, filename):
         files = {'file': open(filename, 'rb')}

@@ -51,6 +51,7 @@ Dashboard
               <th>Username</th>
               <th>Location</th>
               <th>Time remaining</th>
+              <th>OctoStream</th>
             </tr>
           </thead>
           <tbody>
@@ -60,6 +61,7 @@ Dashboard
                    <td>{{ job[1] }}</td>
                    <td>{{ job[2] }}</td>
                    <td>{{ job[3] }}</td>
+                   <td><a href={{ job[4] }}>View</a></td>
                </tr>
              {% endfor %}
           </tbody>

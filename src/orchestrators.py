@@ -14,6 +14,7 @@ class Orchestrator():
             for printer in self.printers:
                 if printer.can_make(job):
                     job.location = printer.location
+                    job.printing_on = printer
                     job.time_remaining = str(randint(47, 59)) + " mins"
                     printer.make(job)
                     print_q.put(job)

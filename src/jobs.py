@@ -8,3 +8,4 @@ class Job():
         self.user     = user
         self.location = 'Pending'
         self.time_remaining = 'Pending'
+        self.printing_on = None
