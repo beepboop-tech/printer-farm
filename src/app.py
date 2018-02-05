@@ -45,9 +45,10 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 printers = [
-    Printer('Duplicator i3',    '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9', 'Hackspace', 'duplicator',   'PLA', 'black'),
-    Printer('Ultimaker 2+ (1)', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A', 'Hackspace', 'Ultimaker 2+', 'PLA', 'grey'),
-    Printer('Ultimaker 2+ (2)', '192.168.0.203', 'E5CDD2F0EF354BA4A45241D5F1203BEC', 'Hackspace', 'Ultimaker 2+', 'PLA', 'any')
+    Printer('Ultimaker 2+ (1)',    '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
+            'Hackspace', 'duplicator',   'PLA', 'red'),
+    Printer('Ultimaker 2+ (2)', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
+            'Hackspace', 'Ultimaker 2+', 'PLA', 'red')
 ]
 orchestrator = Orchestrator(printers)
 
@@ -245,4 +246,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(debug=True)
