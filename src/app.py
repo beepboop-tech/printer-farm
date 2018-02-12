@@ -3,7 +3,8 @@ import os
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
+from flask_wtf.file import FileField, FileAllowed, FileRequired
+from wtforms import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,7 +12,7 @@ from werkzeug.utils import secure_filename
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_admin import Admin, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
-
+from emailValidator import checkUobEmail
 from orchestrators import Orchestrator
 from printers import Printer
 from jobs import Job
@@ -45,13 +46,16 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 printers = [
-    Printer('Ultimaker 2+ (1)',    '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
-            'Hackspace', 'duplicator',   'PLA', 'red'),
-    Printer('Ultimaker 2+ (2)', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
-            'Hackspace', 'Ultimaker 2+', 'PLA', 'red')
+    # Printer('Ultimaker 2+ (1)',    '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
+    #         'Hackspace', 'duplicator',   'PLA', 'red'),
+    # Printer('Ultimaker 2+ (2)', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
+    #         'Hackspace', 'Ultimaker 2+', 'PLA', 'red')
 ]
 orchestrator = Orchestrator(printers)
-
+# Printer('Ultimaker 2+ (1)',    '192.168.0.201', 'B5A36115A3DC49148EFC52012E7EBCD9',
+#         'Hackspace', 'duplicator',   'PLA', 'red'),
+# Printer('Ultimaker 2+ (2)', '192.168.0.202', 'ED7F718BBE11456BA3619A04C66EF74A',
+#         'Hackspace', 'Ultimaker 2+', 'PLA', 'red')
 worker_thread = threading.Thread(target=orchestrator.run, args=(waiting_q, printing_q, ))
 worker_thread.start()
 
@@ -105,12 +109,23 @@ class loginForm(FlaskForm):
     remember = BooleanField('remember me')
 
 
+valid_emails = ["my.bristol.ac.uk", "bristol.ac.uk"]
+
+
 class registerForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     email = StringField('email', validators=[InputRequired(), Email(
-        message='Invalid email'), Length(max=50)])
+        message='Invalid email'), Length(max=50), checkUobEmail()])
     faculty = StringField('faculty', validators=[InputRequired(), Length(max=80)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+
+
+class uploadForm(FlaskForm):
+    colour = SelectField('Filament colour', choices=[('r', 'Red'), ('b', 'Black'), ('g', 'Grey')])
+    material = SelectField('Filament material', choices=[(
+        'pla', 'PLA'), ('abs', 'ABS'), ('ninja', 'NinjaFlex')])
+    gcode = FileField('gcode file', validators=[
+        FileRequired()])
 
 
 def make_printer_info():
@@ -134,6 +149,19 @@ def make_printer_advanced_info():
 @app.route('/')
 def index():
     return render_template('index.html', printer_list=make_printer_info())
+
+
+@app.route('/testupload', methods=['GET', 'POST'])
+def testUpload():
+    form = uploadForm()
+    if form.validate_on_submit():
+        colour = form.colour.data
+        material = form.material.data
+        gcode = form.gcode.data
+        filename = secure_filename(gcode.filename)
+        gcode.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return "working"
+    return render_template('testUpload.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
